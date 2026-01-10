@@ -87,7 +87,7 @@ public float4 rayTriangleTest(uint2 tid, uint2 canvasSize, StructuredBuffer<Tria
     }
     else
     {
-        return float4(1.0, 0.0, 1.0, 1.0);
+        return float4(0.0, 0.0, 0.0, 1.0);
     }
 }
 
