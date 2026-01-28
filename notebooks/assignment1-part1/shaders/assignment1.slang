@@ -12,6 +12,7 @@ public float4 fillRed(uint2 tid)
     // Return the color as a float4 vector (red, green, blue, alpha).
     // In this example, we set alpha to 1 to indicate a fully opaque pixel.
     // We'll cover alpha, transparency later in the class.
+    // the color is a float4 vector (red, green, blue, alpha)
     return float4(1.0, 0.0, 0.0, 1.0);
 }
 
@@ -24,8 +25,17 @@ public float4 fillRed(uint2 tid)
 public float4 fillGradient(uint2 tid, uint2 canvasSize)
 {
     // TODO: Student implementation starts here.
+    // the color is a float4 vector (red, green, blue, alpha)
+    // the uv coordinate is a float2 vector (u, v)
+    // tid is the 2D coordinate of the current thread. Ranges from (0, 0) to (canvasSize.x, canvasSize.y).
+    // tid is not normalized, so let's normalize it to the range of (0, 1)
+    float2 normalizedTid = float2(tid) / float2(canvasSize);
 
-    return float4(1.0, 0.0, 1.0, 1.0);
+    // (u,v) = (0.0, 0.0) at the bottom-left corner: RGB_A(1.0, 0.0, 0.0, 1.0)
+    // (u,v) = (1.0, 1.0) at the top-right corner: RGB_A(0.0, 1.0, 0.0, 1.0)
+    // (u,v) = (normalizedTid.x, normalizedTid.y)
+    // liner interpolation!
+    return float4(normalizedTid.x, normalizedTid.y, 0.0, 1.0);
 
     // TODO: Student implementation ends here.
 }
@@ -39,11 +49,21 @@ public float4 fillGradient(uint2 tid, uint2 canvasSize)
  */
 public float4 fillCheckerboard(uint2 tid, uint2 canvasSize, uint numSquares)
 {
-    // TODO: Student implementation starts here.
+        // First, let's define the checkerboard pattern
+        float increment = 1.0 / numSquares;
+        float2 normalizedTid = float2(tid) / float2(canvasSize);
+        int index_u = int(normalizedTid.x / increment);
+        int index_v = int(normalizedTid.y / increment);
 
-    return float4(1.0, 0.0, 1.0, 1.0);
-
-    // TODO: Student implementation ends here.
+        // Depending on the index_u and index_v, we can determine the color of the pixel.
+        if((index_u + index_v) % 2 == 0)
+        {
+            return float4(1.0, 1.0, 1.0, 1.0);
+        }
+        else
+        {
+            return float4(0.0, 0.0, 0.0, 1.0);
+        }
 }
 
 /**
